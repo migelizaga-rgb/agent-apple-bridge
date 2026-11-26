@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+  <key>CFBundleDevelopmentRegion</key>
+  <string>en</string>
+  <key>CFBundleExecutable</key>
+  <string>__EXECUTABLE__</string>
+  <key>CFBundleIdentifier</key>
+  <string>io.github.mig&#101;lizaga-rgb.agentapplebridge</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+  <key>CFBundleName</key>
+  <string>Agent Apple Bridge</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>1.0</string>
+  <key>CFBundleVersion</key>
+  <string>1</string>
+  <key>LSBackgroundOnly</key>
+  <true/>
+  <key>NSRemindersFullAccessUsageDescription</key>
+  <string>AgentAppleBridge uses Reminders access only for requests from the configured owner.</string>
+  <key>NSContactsUsageDescription</key>
+  <string>AgentAppleBridge uses Contacts access only to look up contacts for requests from the configured owner.</string>
+  <key>NSAppleEventsUsageDescription</key>
+  <string>AgentAppleBridge uses Apple Events to read and update Notes only for requests from the configured owner.</string>
+</dict>
+</plist>
