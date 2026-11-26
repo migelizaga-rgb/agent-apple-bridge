@@ -65,6 +65,44 @@ bundle keep permission identity consistent. The bridge never grants TCC access
 or bypasses system restrictions. Tests use capability requests and a fake
 Messages backend and need no real TCC grants.
 
+## How a request flows
+
+```mermaid
+flowchart LR
+    A[Agent process] -- "newline JSON over<br/>0600 Unix socket" --> B{Same UID?<br/>getpeereid}
+    B -- no --> X[Connection refused]
+    B -- yes --> C[Envelope validation<br/>version, domain, mode]
+    C --> D{Messages write?}
+    D -- yes --> G{OutboundGuard}
+    G -- blocked --> E[outbound_blocked error]
+    G -- clean --> H[imsg backend]
+    D -- no --> F[Contacts / Notes / Reminders<br/>native frameworks]
+    H --> L[Metadata-only audit:<br/>action, payload hash, success]
+    F --> L
+    E --> L
+```
+
+What the guard does, captured from a debug build whose Messages backend was
+replaced with `/usr/bin/false` so nothing could be sent:
+
+```text
+> Running 5 min late
+< {"success":false,"code":"command_failed","error":"Apple bridge command exited 1","version":1}
+> Deploy key is ghp_aaaaaaaaaaaaaaaaaaaaaa…
+< {"success":false,"code":"outbound_blocked","error":"message content failed the GitHub token pre-send check","version":1}
+> See /Users/example/notes.txt
+< {"success":false,"code":"outbound_blocked","error":"message content failed the internal path pre-send check","version":1}
+> {"path":"/etc/hosts"}
+< {"success":false,"code":"outbound_blocked","error":"message content failed the raw tool-call JSON pre-send check","version":1}
+```
+
+The clean message passed the guard and reached the (inert) backend. The other
+three never did. The audit log records each attempt without its content:
+
+```json
+{"action":"send","domain":"messages","mode":"write","payloadHash":"fd17203b…","success":false,"ts":"2026-11-26T03:44:52Z"}
+```
+
 ## Install
 
 Requires macOS 14+, Swift 6+, and Node.js 24+ for the example and integration
